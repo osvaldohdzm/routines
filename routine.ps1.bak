@@ -4,6 +4,7 @@ $downloads_path = (New-Object -ComObject Shell.Application).NameSpace('shell:Dow
 
 Write-Host "`n`nUpdating repositories...`n" -NoNewline -ForegroundColor green
 
+cd ..
 $files = (Get-ChildItem . -Directory).FullName
 foreach ($dirpath in $files)
 {

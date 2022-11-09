@@ -62,3 +62,6 @@ foreach($item in $Recycler.Items())
 cd $current_path
 
 
+Write-Host "`n`nPress any key to continue...`n" -NoNewline -ForegroundColor green;
+$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
+
