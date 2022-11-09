@@ -10,7 +10,7 @@ foreach ($dirpath in $files)
 {
 	cd $dirpath
  if(git rev-parse --is-inside-work-tree 2> $null) {
-   Write-Output "Executing actions for $dirpath"
+  Write-Host "`n`nExecuting actions for $dirpath...`n" -NoNewline -ForegroundColor green
   git add .
   git commit -m "Automatic commit" -m "New changes"
   git pull origin main
