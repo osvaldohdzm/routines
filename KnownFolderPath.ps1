@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Sets a known folder's path using SHSetKnownFolderPath.
+    Sets a known folders path using SHSetKnownFolderPath.
 .PARAMETER Folder
     The known folder whose path to set.
 .PARAMETER Path
@@ -109,19 +109,30 @@ function Set-KnownFolderPath {
     }
     
     # Define SHSetKnownFolderPath if it hasn't been defined already
-    $Type = ([System.Management.Automation.PSTypeName]'KnownFolders').Type
-    if (-not $Type) {
+    $Type1 = ([System.Management.Automation.PSTypeName]'KnownFolders').Type
+    if (-not $Type1) {
         $Signature = @'
 [DllImport("shell32.dll")]
 public extern static int SHSetKnownFolderPath(ref Guid folderId, uint flags, IntPtr token, [MarshalAs(UnmanagedType.LPWStr)] string path);
 '@
-        $Type = Add-Type -MemberDefinition $Signature -Name 'KnownFolders' -Namespace 'SHSetKnownFolderPath' -PassThru
+        $Type1 = Add-Type -MemberDefinition $Signature -Name 'KnownFolders' -Namespace 'SHSetKnownFolderPath' -PassThru
+    }
+
+    $Type2 = ([System.Management.Automation.PSTypeName]'ChangeNotify').Type
+    if (-not $Type2) {
+        $Signature = @'
+[DllImport("Shell32.dll")]
+public static extern int SHChangeNotify(int eventId, int flags, IntPtr item1, IntPtr item2);
+'@
+        $Type2 = Add-Type -MemberDefinition $Signature -Name 'ChangeNotify' -Namespace 'SHChangeNotify' -PassThru
     }
     
     # Validate the path
     if (Test-Path $Path -PathType Container) {
         # Call SHSetKnownFolderPath
-        return $Type::SHSetKnownFolderPath([ref]$KnownFolders[$KnownFolder], 0, 0, $Path)
+        $r = $Type1::SHSetKnownFolderPath([ref]$KnownFolders[$KnownFolder], 0, 0, $Path)
+        $Type2::SHChangeNotify(0x8000000, 0x1000, 0, 0)
+        return $r
     } else {
         throw New-Object System.IO.DirectoryNotFoundException "Could not find part of the path $Path."
     }
