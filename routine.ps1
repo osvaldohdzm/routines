@@ -12,9 +12,9 @@ foreach ($dirpath in $files)
  if(git rev-parse --is-inside-work-tree 2> $null) {
    Write-Output "Executing actions for $dirpath"
   git add .
-  git commit -m "New changes"
-  git pull origin
-  git push origin
+  git commit -m "Automatic commit" -m "New changes"
+  git pull origin main
+  git push origin main
 }else {
   Write-Output "$dirpath is not a Git repository!"
 }
@@ -52,7 +52,7 @@ foreach($item in $Recycler.Items())
 {
     $DeletedDate = $Recycler.GetDetailsOf($item,2) -replace "\u200f|\u200e",""
     $dtDeletedDate = get-date $DeletedDate 
-    If($dtDeletedDate -lt (Get-Date).AddDays(-15))
+    If($dtDeletedDate -lt (Get-Date).AddDays(-7))
     {
         Remove-Item -Path $item.Path -Confirm:$false -Force -Recurse
     }#EndIF
