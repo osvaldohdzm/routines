@@ -1,7 +1,8 @@
 # Initialize vars used on script
 $current_path = (Get-Location).Path
 $user_path = $env:USERPROFILE
-$custom_user_base_path = "d:\"
+$letter_storage_base_path = "D"
+$custom_user_base_path = "D:\Desktop\Local"
 $downloads_path = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path
 
 
@@ -18,8 +19,15 @@ mkdir Tools
 mkdir Videos
 mkdir Music
 
+Write-Host "`n`nChanging user libraries location...`n" -NoNewline -ForegroundColor green;
 cd $current_path
-
 Import-Module ./KnownFolderPath.ps1 -Force
-Set-KnownFolderPath -KnownFolder 'Downloads' -Path 'C:\Users\ohernandez\Desktop\Local\Downloads'
-Set-KnownFolderPath -KnownFolder 'Documents' -Path 'C:\Users\ohernandez\Desktop\Local\Downloads'
+Set-KnownFolderPath -KnownFolder 'Downloads' -Path "$custom_user_base_path\Downloads"
+Set-KnownFolderPath -KnownFolder 'Documents' -Path "$custom_user_base_path\Documents"
+Set-KnownFolderPath -KnownFolder 'Music' -Path "$custom_user_base_path\Music"
+Set-KnownFolderPath -KnownFolder 'Pictures' -Path "$custom_user_base_path\Pictures"
+Set-KnownFolderPath -KnownFolder 'Videos' -Path "$custom_user_base_path\Videos"
+
+
+Write-Host "`n`nPress any key to continue...`n" -NoNewline -ForegroundColor green;
+$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
