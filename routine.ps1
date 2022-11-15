@@ -41,7 +41,7 @@ $_.LastWriteTime -lt (get-date).AddDays(-30)} | Remove-Item
 Write-Host "`n`nRemoving empty folders in downloads...`n" -NoNewline -ForegroundColor green
 cd $downloads_path
 Get-ChildItem -recurse | Where {$_.PSIsContainer -and `
-@(Get-ChildItem -Lit $_.Fullname -r | Where {!$_.PSIsContainer}).Length -eq 0} |
+@( (Get-Item -Lit $_).Fullname | Where {!$_.PSIsContainer}).Length -eq 0} |
 Remove-Item -recurse
 
 
