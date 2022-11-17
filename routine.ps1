@@ -34,15 +34,15 @@ foreach ($file in (get-childitem -file $downloads_path))
 
 
 Write-Host "`n`nRemoving older files in downloads...`n" -NoNewline -ForegroundColor green
-cd $downloads_path
-Get-ChildItem -recurse | Where {!$_.PSIsContainer -and `
-$_.LastWriteTime -lt (get-date).AddDays(-30)} | Remove-Item 
+#cd $downloads_path
+#Get-ChildItem -recurse | Where {!$_.PSIsContainer -and `
+#$_.LastWriteTime -lt (get-date).AddDays(-30)} | Remove-Item 
 
 Write-Host "`n`nRemoving empty folders in downloads...`n" -NoNewline -ForegroundColor green
-cd $downloads_path
-Get-ChildItem -recurse | Where {$_.PSIsContainer -and `
-@( (Get-Item -Lit $_).Fullname | Where {!$_.PSIsContainer}).Length -eq 0} |
-Remove-Item -recurse
+#cd $downloads_path
+#Get-ChildItem -recurse | Where {$_.PSIsContainer -and `
+#@( (Get-Item -Lit $_).Fullname | Where {!$_.PSIsContainer}).Length -eq 0} |
+#Remove-Item -recurse
 
 
 Write-Host "`n`nRemoving older files in recycle bin...`n" -NoNewline -ForegroundColor green

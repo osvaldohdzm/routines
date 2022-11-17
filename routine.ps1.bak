@@ -10,11 +10,12 @@ foreach ($dirpath in $files)
 {
 	cd $dirpath
  if(git rev-parse --is-inside-work-tree 2> $null) {
-   Write-Output "Executing actions for $dirpath"
+  Write-Host "`n`nExecuting actions for $dirpath...`n" -NoNewline -ForegroundColor green
+  git pull origin main
   git add .
-  git commit -m "New changes"
-  git pull origin
-  git push origin
+  git commit -m "Automatic commit" -m "New changes"
+  git pull origin main
+  git push origin main
 }else {
   Write-Output "$dirpath is not a Git repository!"
 }
@@ -40,7 +41,7 @@ $_.LastWriteTime -lt (get-date).AddDays(-30)} | Remove-Item
 Write-Host "`n`nRemoving empty folders in downloads...`n" -NoNewline -ForegroundColor green
 cd $downloads_path
 Get-ChildItem -recurse | Where {$_.PSIsContainer -and `
-@(Get-ChildItem -Lit $_.Fullname -r | Where {!$_.PSIsContainer}).Length -eq 0} |
+@( (Get-Item -Lit $_).Fullname | Where {!$_.PSIsContainer}).Length -eq 0} |
 Remove-Item -recurse
 
 
@@ -52,7 +53,7 @@ foreach($item in $Recycler.Items())
 {
     $DeletedDate = $Recycler.GetDetailsOf($item,2) -replace "\u200f|\u200e",""
     $dtDeletedDate = get-date $DeletedDate 
-    If($dtDeletedDate -lt (Get-Date).AddDays(-15))
+    If($dtDeletedDate -lt (Get-Date).AddDays(-7))
     {
         Remove-Item -Path $item.Path -Confirm:$false -Force -Recurse
     }#EndIF
@@ -61,4 +62,7 @@ foreach($item in $Recycler.Items())
 # End Script
 cd $current_path
 
+
+Write-Host "`n`nPress any key to continue...`n" -NoNewline -ForegroundColor green;
+$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
 
